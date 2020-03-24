@@ -1,21 +1,32 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Button, AsyncStorage, Text, Image } from "react-native";
-import NetInfo from "@react-native-community/netinfo";
-
+import Login from './src/components/login/Login'
 import PlaceInput from "./src/components/PlaceInput/PlaceInput";
 import PlaceList from "./src/components/PlaceList/PlaceList";
 import PlaceDetail from "./src/components/PlaceDetail/PlaceDetail";
 import pic from "./src/assets/b.jpg"
+import Signup from './src/components/signup/Signup'
+import Forgot from "./src/components/forgot/Forgot";
+import Apikeys from './constants/Apikeys'
+import * as firebase from 'firebase'
 export default class App extends Component {
-  state = {
-    places: [],
-    selectedPlace: null,
-    placeName:'',
-    isloading:true
-  };
   
   
-  
+  constructor(props){
+    super(props);
+    this.state = {
+      places: [],
+      selectedPlace: null,
+      placeName:'',
+      isloading:true,
+      login:true,
+      signup:false,
+      forgot:false
+    };
+    
+
+    firebase.initializeApp(Apikeys.FirebaseConfig)
+  }
   
   componentWillMount(){
    setTimeout(()=>this.setState({isloading:false}),5000); 
@@ -55,7 +66,40 @@ export default class App extends Component {
   
   
   } 
-
+  toforgotpassword=()=>{
+    this.setState({
+login:false,
+signup:false,
+forgot:true
+    })
+  }
+fromsignup=()=>{
+  this.setState({
+    login:true,
+    signup:false,
+    forgot:false
+  })
+}
+signup=()=>{
+    this.setState({
+      login:false,
+      signup:true
+    })
+  }
+  sucsess=()=>{
+    this.setState({
+      forgot:false,
+      login:false,
+      signup:false
+    })
+  }
+  fromforgot=()=>{
+    this.setState({
+      forgot:false,
+      login:true,
+      signup:false
+    })
+  }
   addnewname = (newname)=>{
   this.setState({
     places:[...this.state.places,newname],
@@ -136,12 +180,22 @@ if(this.state.isloading){
 }
     return (
       <View style={styles.container}>
+        <Login sucsess={this.sucsess} signup={this.signup} forgot={this.toforgotpassword} visible={this.state.login}></Login>
+        <Signup fromsignup={this.fromsignup} visible={this.state.signup}></Signup>
+        <Forgot visible={this.state.forgot} fromforgot={this.fromforgot}></Forgot>
         <PlaceDetail
           addnewname={this.addnewname}
           selectedPlace={this.state.selectedPlace}
           onItemDeleted={this.placeDeletedHandler}
           onModalClosed={this.modalClosedHandler}
         />
+        <Button title="signout" onPress={
+        ()=>{firebase.auth().signOut().then(()=>{
+          this.setState({
+            login:true
+          })
+        })}
+        }></Button>
         <PlaceInput placeSubmitHandler={this.placeSubmitHandler} placeNameChangedHandler={this.placeNameChangedHandler} placeName={this.state.placeName} onPlaceAdded={this.placeAddedHandler} />
         <PlaceList
        
