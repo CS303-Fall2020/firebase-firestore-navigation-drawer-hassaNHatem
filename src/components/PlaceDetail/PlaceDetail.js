@@ -1,7 +1,7 @@
 import React ,{Component}from "react";
 import { Modal, View, Image, Text, Button, StyleSheet, TextInput } from "react-native";
 import PLaceList from '../PlaceList/PlaceList'
-
+import Username from '../../Username'
 
 
 
@@ -24,9 +24,14 @@ returnnewname=()=>{
   
   render(){
     
+   
     let modalContent = null;
 
   if (this.props.selectedPlace) {
+    
+   
+   Username.placename = this.props.selectedPlace.title
+   console.log(this.props.selectedPlace)
     modalContent = (
       <View>
         <Image source={this.props.selectedPlace.image} style={styles.placeImage} />

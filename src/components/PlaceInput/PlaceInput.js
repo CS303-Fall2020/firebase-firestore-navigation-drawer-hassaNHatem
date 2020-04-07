@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { View, TextInput, Button, StyleSheet } from "react-native";
+import Username from '../../Username'
 
 class PlaceInput extends Component {
 
@@ -21,6 +22,7 @@ class PlaceInput extends Component {
   };
 
   render() {
+
     return (
       <View style={styles.inputContainer}>
         <TextInput

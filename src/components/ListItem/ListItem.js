@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, TouchableOpacity,Ico ,Image, Button } from "react-native";
+import * as firebase from 'firebase';
+import Username from '../../Username'
 
 class listItem extends Component{ 
   state={
@@ -13,7 +15,40 @@ class listItem extends Component{
     },
    name:"check"
   }
+
+  componentDidMount(){
+    console.log(this.props.title)
+    firebase.firestore().collection("users").doc(Username.UserName).collection("todos").doc(this.props.title).get().then((doc)=>{
+      this.setState({
+    name:doc.data().checked
+      })
+     })
+    if(this.state.name==="checked"){
+      this.setState({textstyle:[{textDecorationLine:"line-through",      fontSize:15
+    }],
+  
+    btnstyle:[{color:"blue"}]
+   
+    
+    })
+
+    
+    }else if(this.state.name==="check"){
+      this.setState({textstyle:[{textDecorationLine:"none",      fontSize:15
+    }]
+    ,
+    btnstyle:[{color:"red"}]
+   
+    })
+   
+    }
+  
+  }
   render(){
+   
+   
+
+   
  return ( 
   <TouchableOpacity onPress={this.props.onItemPressed}>
     <View>
@@ -25,15 +60,26 @@ class listItem extends Component{
       title={this.state.name} style={this.state.btnstyle} onPress={()=>{if(this.state.name==="check"){
         this.setState({textstyle:[{textDecorationLine:"line-through",      fontSize:15
       }],
-      name:"checked",
-      btnstyle:[{color:"blue"}]
+    
+      btnstyle:[{color:"blue"}],
+      name:"checked"
+      
       })
+firebase.firestore().collection("users").doc(Username.UserName).collection("todos").doc(this.props.title).update({
+  checked:"checked"
+})
+      Username.checked = "checked"
       }else if(this.state.name==="checked"){
         this.setState({textstyle:[{textDecorationLine:"none",      fontSize:15
       }]
-      ,name:"check",
-      btnstyle:[{color:"red"}]
+      ,
+      btnstyle:[{color:"red"}],
+      name:"check"
       })
+      firebase.firestore().collection("users").doc(Username.UserName).collection("todos").doc(this.props.title).update({
+        checked:"check"
+      })
+      Username.checked = "check"
       }
     }
       }

@@ -1,9 +1,11 @@
 import React from "react";
 import { StyleSheet, FlatList } from "react-native";
-
+import * as firebase from 'firebase'
+import Username from '../../Username'
 import ListItem from "../ListItem/ListItem";
 
 const placeList = props => {
+ 
   return (
     <FlatList
       style={styles.listContainer}
@@ -12,7 +14,12 @@ const placeList = props => {
         <ListItem
           placeName={info.item.name}
           placeImage={info.item.image}
-          onItemPressed={() => props.onItemSelected(info.item.key)}
+          title = {info.item.title}
+          
+          key = {info.item.key}
+          onItemPressed={() =>{ props.onItemSelected(info.item.key)
+          
+          }}
         />
       )}
     />
